@@ -1,0 +1,21 @@
+WITH ranked_messages AS (
+    SELECT 
+        _id, 
+        strftime('%Y-%m-%d %H:%M:%S.', "timestamp"/1000, 'unixepoch') || ("timestamp"%1000) as timestamp, 
+        chat_row_id, 
+        text_data,
+        LAG(_id) OVER (ORDER BY _id) AS previous_id  -- Ottieni il valore di _id della riga precedente
+    FROM 
+        message_view
+    WHERE 
+        text_data <> 'NULL' 
+        AND "timestamp" BETWEEN 1693353610000 AND 1693872010000  -- Timestamp in millisecondi per le date specificate
+)
+SELECT 
+    _id, 
+    timestamp, 
+    chat_row_id, 
+    text_data, 
+    COALESCE(NULLIF(_id - previous_id - 1, 0), 0) AS gap  -- Calcola il gap
+FROM 
+    ranked_messages;
