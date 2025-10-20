@@ -19,3 +19,5 @@ SELECT
     COALESCE(NULLIF(_id - previous_id - 1, 0), 0) AS gap  -- Calcola il gap
 FROM 
     ranked_messages;
+
+/* restituisce una tabella contenente una colonna con il numero di messaggi mancanti tra quello corrente e quello precedente, così da sapere quanti messaggi/storie/elementi sono stati cancellati.
